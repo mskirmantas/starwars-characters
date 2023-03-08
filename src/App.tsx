@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import PrivateRoute from "./auth/PrivateRoute";
+import { AppContext } from "./context/AppContext";
 
-function App() {
+import Homepage from "./pages/Homepage/Homepage";
+import Login from "./pages/Login/Login";
+
+import * as S from "./App.style";
+import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
+
+const App: React.FC = () => {
+  const { appState } = React.useContext(AppContext);
+
+  const { isLoading } = appState;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <S.Container>
+        {isLoading && <LoadingScreen />}
+        <Router>
+          <Switch>
+            <PrivateRoute exact path="/" component={Homepage} />
+            <Route path="/login" component={Login} />
+          </Switch>
+        </Router>
+      </S.Container>
     </div>
   );
-}
+};
 
 export default App;
